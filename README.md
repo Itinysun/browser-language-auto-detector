@@ -61,7 +61,17 @@ import {getBrowserLocalOrigin} from 'browser-language-auto-detector'
 []
 ```
 
+### for umd version
+```text
+Please download form git release:
+https://github.com/Itinysun/browser-language-auto-detector/releases
+```
+
 ## LICENSE
 
 MIT
+
+## BUG report
+Please tell us at
+https://github.com/Itinysun/browser-language-auto-detector/issues
 
