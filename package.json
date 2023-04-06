@@ -41,7 +41,6 @@
     "@babel/runtime": "^7.21.0"
   },
   "np": {
-    "yarn": false,
     "contents": "dist"
   }
 }

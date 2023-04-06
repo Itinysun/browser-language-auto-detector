@@ -40,19 +40,18 @@ $ yarn test
 
 ### get language name
 
-```javascript
+```text
 import {getLanguageName} from 'browser-language-auto-detector'
 console.log(getLanguageName());
 
 //success
-{chinese: '简体中文', origin: '简体中文', rtl: false, key: 'chinese', english: 'Chinese'}
-
+{chinese: '简体中文', origin : '简体中文', rtl: false, key: 'chinese', english: 'Chinese'}
 //faild
 null
 
 ```
 ### get browser's origin language
-```javascript
+```text
 import {getBrowserLocalOrigin} from 'browser-language-auto-detector'
 
 //success
