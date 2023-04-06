@@ -23,7 +23,8 @@
   "homepage": "https://github.com/Itinysun/browser-language-auto-detector#readme",
   "license": "MIT",
   "files": [
-    "dist"
+    "dist",
+    "README.md"
   ],
   "publishConfig": {
     "access": "public",
