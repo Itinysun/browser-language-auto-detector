@@ -11,7 +11,7 @@
     "build:deps": "father prebundle",
     "prepublishOnly": "father doctor && father build",
     "test": "jest",
-    "publish": "father build && np"
+    "np": "father build && np"
   },
   "keywords": [],
   "authors": [

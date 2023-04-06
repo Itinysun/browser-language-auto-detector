@@ -47,18 +47,18 @@ export function translateOriginLanguage(names: Array<string>): string | null {
 
 /**
  * get the origin language code form browser , empty if not found
- * @param wid Window |MockBrowser please don't use this param , it's just for test only
+ * @param avoidUseThisParam Window |MockBrowser please don't use this param , it's just for test only
  * @returns Array<string>
  */
-export function getBrowserLocalOrigin(wid: Window | MockBrowser = window):Array<string> {
-    if (wid.navigator.languages && wid.navigator.languages.length)
-        return [...wid.navigator.languages]
-    if (wid.navigator.language)
-        return [wid.navigator.language]
+export function getBrowserLocalOrigin(avoidUseThisParam: Window | MockBrowser = window):Array<string> {
+    if (avoidUseThisParam.navigator.languages && avoidUseThisParam.navigator.languages.length)
+        return [...avoidUseThisParam.navigator.languages]
+    if (avoidUseThisParam.navigator.language)
+        return [avoidUseThisParam.navigator.language]
     try {
         //treat ie 10 and older
-        if (Reflect.has(wid.navigator, 'userLanguage')) { // @ts-ignore
-            return [wid.navigator["userLanguage"].toString()]
+        if (Reflect.has(avoidUseThisParam.navigator, 'userLanguage')) { // @ts-ignore
+            return [avoidUseThisParam.navigator["userLanguage"].toString()]
         }
     } catch (e) {
         console.warn('failed to get userLanguage from ie')
@@ -69,11 +69,11 @@ export function getBrowserLocalOrigin(wid: Window | MockBrowser = window):Array<
 /**
  * detect language name from browser
  * Returns the object of LanguageName or null
- * @param wid Window |MockBrowser please don't use this param , it's just for test only
+ * @param avoidUseThisParam Window |MockBrowser please don't use this param , it's just for test only
  * @returns  {chinese: String,origin: String,rtl: Boolean,key: String,english: String} | null
  */
-export function getLanguageName(wid: Window | MockBrowser = window): LanguageName | null {
-    const locals = getBrowserLocalOrigin(wid)
+export function getLanguageName(avoidUseThisParam: Window | MockBrowser = window): LanguageName | null {
+    const locals = getBrowserLocalOrigin(avoidUseThisParam)
     const name = translateOriginLanguage(locals)
     if (name)
         return languageNames.get(name) || null
