@@ -1,0 +1,43 @@
+{
+  "name": "browser-language-auto-detector",
+  "version": "0.0.1",
+  "description": "Auto-detect language name for browser , turn origin name to language name and more detail",
+  "module": "dist/esm/index.js",
+  "types": "dist/esm/index.d.ts",
+  "browser": "dist/umd/browser-language-auto-detector.min.js",
+  "scripts": {
+    "dev": "father dev",
+    "build": "father build",
+    "build:deps": "father prebundle",
+    "prepublishOnly": "father doctor && father build",
+    "test": "jest",
+    "publish": "father build && np"
+  },
+  "keywords": [],
+  "authors": [
+    "itinysun"
+  ],
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "devDependencies": {
+    "@jest/globals": "^29.5.0",
+    "father": "^4.1.8",
+    "jest": "^29.5.0",
+    "np": "^7.7.0",
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.0.3"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.21.0"
+  },
+  "np": {
+    "yarn": false,
+    "contents": "dist"
+  }
+}
