@@ -1,7 +1,7 @@
 {
   "name": "browser-language-auto-detector",
-  "version": "0.0.1",
-  "description": "Auto-detect language name for browser , turn origin name to language name and more detail",
+  "version": "1.0.7",
+  "description": "Auto-detect language name for browser , turn origin code to language name,whether RTL and more ,TS supported",
   "module": "dist/esm/index.js",
   "types": "dist/esm/index.d.ts",
   "browser": "dist/umd/browser-language-auto-detector.min.js",
@@ -17,6 +17,10 @@
   "authors": [
     "itinysun"
   ],
+  "bugs": {
+    "url": "https://github.com/Itinysun/browser-language-auto-detector/issues"
+  },
+  "homepage": "https://github.com/Itinysun/browser-language-auto-detector#readme",
   "license": "MIT",
   "files": [
     "dist"
