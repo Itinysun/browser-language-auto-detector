@@ -39,8 +39,5 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.21.0"
-  },
-  "np": {
-    "contents": "dist"
   }
 }
