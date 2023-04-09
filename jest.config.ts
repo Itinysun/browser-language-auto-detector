@@ -1,8 +1,6 @@
-/** @type {import('ts-jest').JestConfigWithTsJest} */
-module.exports = {
-  preset: 'ts-jest',
-  testEnvironment: 'node',
-  extensionsToTreatAsEsm: ['.ts'],
+import type { JestConfigWithTsJest } from 'ts-jest'
+const jestConfig: JestConfigWithTsJest = {
+  preset: 'ts-jest/presets/default-esm', // or other ESM presets
   moduleNameMapper: {
     '^(\\.{1,2}/.*)\\.js$': '$1',
   },
@@ -17,10 +15,8 @@ module.exports = {
     ],
   },
   collectCoverageFrom: [
-    '**/*.{ts,tsx}',
-    '!**/node_modules/**',
-    '!**/dist/**',
-    '!**/src/bcp47*.*',
+    'src/**/*.{ts,tsx}'
   ],
   collectCoverage:true
 };
+export default jestConfig

@@ -1,9 +1,7 @@
-import {translateOriginLanguage, getLanguageName, getBrowserLocalOrigin} from '../src'
+import {translateOriginLanguage, getLanguageName, getBrowserLocalOrigin,languageNames} from '../src'
 import {expect, test, describe} from '@jest/globals'
 import {bcp47Map} from "../src/browser/bcp47.full";
 import {bcp47MapMin} from "../src/browser/bcp47.min";
-import {languageNames} from "../src/languageNames";
-import {MockBrowser} from "../src/browser/helper";
 
 describe('function model', () => {
     test('translate en-xx to language name', () => {
@@ -16,34 +14,34 @@ describe('function model', () => {
         expect(translateOriginLanguage(['xx'])).toBe(null)
     })
     test('get origin lang array by language', () => {
-        const wid = {navigator: {language: 'lang'}}
-        expect(getBrowserLocalOrigin(wid)).toEqual(['lang'])
+        (global.window as any)={navigator: {language: 'lang'}}
+        expect(getBrowserLocalOrigin()).toEqual(['lang'])
     })
     test('get origin lang array by languages', () => {
-        const wid = {navigator: {languages: ['lang']}}
-        expect(getBrowserLocalOrigin(wid)).toEqual(['lang'])
+        (global.window as any) = {navigator: {languages: ['lang']}}
+        expect(getBrowserLocalOrigin()).toEqual(['lang'])
     })
     test('get origin lang array by ie userLanguage', () => {
-        const wid: MockBrowser = {navigator: {userLanguage: 'lang'}}
-        expect(getBrowserLocalOrigin(wid)).toEqual(['lang'])
+        (global.window as any) = {navigator: {userLanguage: 'lang'}}
+        expect(getBrowserLocalOrigin()).toEqual(['lang'])
     })
     test('get origin lang array by ie userLanguage', () => {
-        const wid: MockBrowser = {navigator: {userLanguage: undefined}}
-        expect(getBrowserLocalOrigin(wid)).toEqual([])
+        (global.window as any) = {navigator: {userLanguage: undefined}}
+        expect(getBrowserLocalOrigin()).toEqual([])
     })
     test('get origin lang array by nothing', () => {
-        const wid: MockBrowser = {navigator: {}}
-        expect(getBrowserLocalOrigin(wid)).toEqual([])
+        (global.window as any) = {navigator: {}}
+        expect(getBrowserLocalOrigin())
     })
 
     test('get translated name object', () => {
-        const wid = {navigator: {language: 'x'}}
-        expect(getLanguageName(wid)).toBeNull()
+        (global.window as any)  = {navigator: {language: 'x'}}
+        expect(getLanguageName()).toBeNull()
     })
 
     test('get translated name object', () => {
-        const wid = {navigator: {language: 'en-US'}}
-        expect(getLanguageName(wid)).toEqual({
+        (global.window as any)  = {navigator: {language: 'en-US'}}
+        expect(getLanguageName()).toEqual({
             chinese: '英语',
             origin: 'English',
             rtl: false,
@@ -51,7 +49,6 @@ describe('function model', () => {
             english: 'English'
         })
     })
-
 })
 
 
