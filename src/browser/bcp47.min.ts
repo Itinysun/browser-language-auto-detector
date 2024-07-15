@@ -1,5 +1,6 @@
 export const bcp47MapMin: Map<string, string> = new Map([
     ['ar-sa', 'arabic'],
+    ['af-ZA','Afrikaans'],
     ['bn-bd', 'bangla'],
     ['bn-in', 'bangla'],
     ['cs-cz', 'czech'],
