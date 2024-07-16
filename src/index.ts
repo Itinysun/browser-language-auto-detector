@@ -179,6 +179,22 @@ export const languageNames: Map<string, LanguageName> = new Map([
     ['uzbek',{chinese: '乌兹别克语', origin: 'o\'zbek', rtl: false, key: 'uzbek', english: 'Uzbek'}],
     ['zulu',{chinese: '祖鲁语', origin: 'Zulu', rtl: false, key: 'zulu', english: 'Zulu'}],
     ['sundanese',{chinese: '巽他语', origin: 'Basa Sunda', rtl: false, key: 'sundanese', english: 'Sundanese'}],
+    ['assamese',{chinese: '阿萨姆语', origin: 'অসমীয়া', rtl: false, key: 'assamese', english: 'Assamese'}],
+    ['fijian',{chinese: '斐济语', origin: 'Fijian', rtl: false, key: 'fijian', english: 'Fijian'}],
+    ['haitian',{chinese: '海地克里奥尔语', origin: 'Kreyòl Ayisyen', rtl: false, key: 'haitian', english: 'Haitian'}],
+    ['hmong',{chinese: '苗语', origin: 'Hmoob', rtl: false, key: 'hmong', english: 'Hmong'}],
+    ['inuktitut',{chinese: '因纽特语', origin: 'ᐃᓄᒃᑎᑐᑦ', rtl: false, key: 'inuktitut', english: 'Inuktitut'}],
+    ['klingon',{chinese: '克林贡语', origin: 'tlhIngan', rtl: false, key: 'klingon', english: 'Klingon'}],
+    ['kurdish',{chinese: '库尔德语', origin: 'Kurdî', rtl: true, key: 'kurdish', english: 'Kurdish'}],
+    ['malagasy',{chinese: '马尔加什语', origin: 'Malagasy', rtl: false, key: 'malagasy', english: 'Malagasy'}],
+    ['maori',{chinese: '毛利语', origin: 'Māori', rtl: false, key: 'maori', english: 'Maori'}],
+    ['oriya',{chinese: '奥里亚语', origin: 'ଓଡ଼ିଆ', rtl: false, key: 'oriya', english: 'Oriya'}],
+    ['queretaro',{chinese: '克雷塔罗瓦克语', origin: 'Queretaro', rtl: false, key: 'queretaro', english: 'Queretaro'}],
+    ['samoan',{chinese: '萨摩亚语', origin: 'Samoan', rtl: false, key: 'samoan', english: 'Samoan'}],
+    ['tahitian',{chinese: '大溪地语', origin: 'Tahitian', rtl: false, key: 'tahitian', english: 'Tahitian'}],
+    ['tigrinya',{chinese: '提格利尼亚语', origin: 'ትግርኛ', rtl: false, key: 'tigrinya', english: 'Tigrinya'}],
+    ['tongan',{chinese: '汤加语', origin: 'Tongan', rtl: false, key: 'tongan', english: 'Tongan'}],
+    ['yucatec',{chinese: '尤卡坦玛雅语', origin: 'Yucatec', rtl: false, key: 'yucatec', english: 'Yucatec'}],
 
 ])
 
