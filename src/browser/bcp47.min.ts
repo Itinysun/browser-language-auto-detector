@@ -90,5 +90,5 @@ export const bcp47MapMin: Map<string, string> = new Map([
     ['te-IN','telugu'],
     ['uz-UZ','uzbek'],
     ['zu-ZA','zulu'],
-    ['su-ID','undanese'],
+    ['su-ID','sundanese'],
 ])
