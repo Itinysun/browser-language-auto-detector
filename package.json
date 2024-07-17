@@ -1,6 +1,6 @@
 {
   "name": "browser-language-auto-detector",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "Auto-detect language name for browser , turn origin code to language name,whether RTL and more ,TS supported",
   "module": "dist/esm/index.js",
   "types": "dist/esm/index.d.ts",
