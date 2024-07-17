@@ -383,7 +383,7 @@ export const bcp47Map: Map<string, string> = new Map([
     ['si', 'sinhalese'],
     ['eo', 'esperanto'],
     ['arkaika', 'esperanto'],
-    
+
     ['af', 'afrikaans'],
     ['am', 'amharic'],
     ['hy', 'armenian'],
@@ -404,7 +404,7 @@ export const bcp47Map: Map<string, string> = new Map([
     ['ga', 'irish'],
     ['kn', 'kannada'],
     ['kk', 'kazakh'],
-    ['km', 'khmer'],
+    ['km', 'cambodia'],
     ['tlh-Latn', 'klingon'],
     ['tlh-Piqd', 'klingon'],
     ['ku', 'kurdish'],
