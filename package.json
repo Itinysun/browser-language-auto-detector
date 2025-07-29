@@ -1,7 +1,7 @@
 {
   "name": "browser-language-auto-detector",
   "version": "2.0.5",
-  "description": "Auto-detect language name for browser , turn origin code to language name,whether RTL and more ,TS supported",
+  "description": "🌍 Intelligent browser language detection library with 100+ languages support, RFC 5646 compliant, LRU cache optimized, TypeScript ready",
   "type": "module",
   "main": "./lib/index.js",
   "module": "./lib/index.js",
@@ -32,8 +32,18 @@
   "keywords": [
     "browser",
     "language",
-    "detector",
-    "RTL"
+    "detector", 
+    "i18n",
+    "internationalization",
+    "localization",
+    "RTL",
+    "bcp47",
+    "rfc5646",
+    "intl",
+    "locale",
+    "typescript",
+    "performance",
+    "cache"
   ],
   "authors": [
     "itinysun"
@@ -44,8 +54,10 @@
   "homepage": "https://github.com/Itinysun/browser-language-auto-detector#readme",
   "license": "MIT",
   "files": [
-    "dist",
-    "README.md"
+    "lib",
+    "README.md",
+    "README-EN.md",
+    "CHANGELOG.md"
   ],
   "publishConfig": {
     "access": "public",

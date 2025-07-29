@@ -2,74 +2,200 @@ import { bcp47Map } from './browser/bcp47.full'
 import { bcp47MapMin } from './browser/bcp47.min'
 
 /**
- * get first matched language name from browser
- * Returns the translated name of origin name
- * @returns  string | null
+ * LRU Cache for language detection results
  */
-export function translateOriginLanguage(names: Array<string>): string | null {
-  if (names.length) {
-    let ret
-    if (
-      names.some(v => {
-        const lang = bcp47MapMin.get(v)
-        if (lang !== undefined) {
-          ret = lang
-          return true
-        }
-      })
-    ) {
-      return ret || null
-    }
-    //append prefix of local item to local
-    //like zh-CN would calc zh again
-    names.forEach(v => {
-      const pos = v.indexOf('-')
-      if (pos > -1) {
-        const pre = v.substring(0, pos)
-        if (names.indexOf(pre) === -1) names.push(pre)
-      }
-    })
-    //find first matched language name
+class LRUCache<K, V> {
+  private cache = new Map<K, V>()
+  private maxSize: number
 
-    if (
-      names.some(v => {
-        const lang = bcp47Map.get(v.toLowerCase())
-        if (lang !== undefined) {
-          ret = lang
-          return true
-        }
-      })
-    ) {
-      return ret || null
+  constructor(maxSize = 100) {
+    this.maxSize = maxSize
+  }
+
+  get(key: K): V | undefined {
+    if (this.cache.has(key)) {
+      const value = this.cache.get(key)!
+      // Move to end (most recently used)
+      this.cache.delete(key)
+      this.cache.set(key, value)
+      return value
+    }
+    return undefined
+  }
+
+  set(key: K, value: V): void {
+    if (this.cache.has(key)) {
+      this.cache.delete(key)
+    } else if (this.cache.size >= this.maxSize) {
+      // Remove least recently used (first item)
+      const firstKey = this.cache.keys().next().value
+      if (firstKey !== undefined) {
+        this.cache.delete(firstKey)
+      }
+    }
+    this.cache.set(key, value)
+  }
+}
+
+/**
+ * Parse language tag according to RFC 5646 and generate fallback sequence
+ * @param tag Language tag like 'zh-Hans-CN' or 'en-US'
+ * @returns Array of fallback language codes ['zh-Hans-CN', 'zh-Hans', 'zh']
+ */
+function parseLanguageTag(tag: string): string[] {
+  const variants: string[] = []
+  const normalized = tag.trim().toLowerCase()
+
+  if (!normalized) return variants
+
+  variants.push(normalized)
+
+  const parts = normalized.split('-')
+
+  // Generate fallback sequence: zh-hans-cn -> zh-hans -> zh
+  for (let i = parts.length - 1; i > 0; i--) {
+    const fallback = parts.slice(0, i).join('-')
+    if (fallback && !variants.includes(fallback)) {
+      variants.push(fallback)
     }
   }
+
+  return variants
+}
+
+/**
+ * Standardize language code using Intl.Locale API with fallback
+ * @param languageCode Raw language code
+ * @returns Standardized language code
+ */
+function standardizeLanguageCode(languageCode: string): string {
+  try {
+    // Use Intl.Locale for standardization if available
+    if (typeof Intl !== 'undefined' && Intl.Locale) {
+      const locale = new Intl.Locale(languageCode)
+      return locale.language
+    }
+  } catch {
+    // Fallback to simple parsing
+  }
+
+  // Simple fallback: extract language part before first hyphen
+  return languageCode.split('-')[0].toLowerCase()
+}
+
+// Combined language mapping for better performance
+const combinedLanguageMap = new Map([...bcp47MapMin, ...bcp47Map])
+
+// Cache for language detection results
+const languageDetectionCache = new LRUCache<string, string | null>(100)
+
+/**
+ * Get first matched language name from browser language codes
+ * Optimized version with caching and better fallback strategy
+ * @param names Array of language codes from browser
+ * @returns Language key string or null
+ */
+export function translateOriginLanguage(names: Array<string>): string | null {
+  if (!names.length) return null
+
+  // Create cache key preserving order since priority matters
+  const cacheKey = names.join(',')
+
+  // Check cache first
+  const cached = languageDetectionCache.get(cacheKey)
+  if (cached !== undefined) {
+    return cached
+  }
+
+  // Generate expanded language codes with fallbacks
+  const expandedCodes: string[] = []
+  const seen = new Set<string>()
+
+  for (const name of names) {
+    const variants = parseLanguageTag(name)
+    for (const variant of variants) {
+      if (!seen.has(variant)) {
+        seen.add(variant)
+        expandedCodes.push(variant)
+      }
+    }
+  }
+
+  // Search in priority order using combined map
+  for (const code of expandedCodes) {
+    const result = combinedLanguageMap.get(code)
+    if (result) {
+      // Cache the result
+      languageDetectionCache.set(cacheKey, result)
+      return result
+    }
+  }
+
+  // Cache negative result to avoid repeated computation
+  languageDetectionCache.set(cacheKey, null)
   return null
 }
 
 /**
- * get the origin language code form browser , empty if not found
- * @returns Array<string>
+ * Get the origin language codes from browser with enhanced fallback support
+ * @param standardize Whether to standardize language codes using Intl.Locale
+ * @returns Array of language codes in priority order
  */
-export function getBrowserLocalOrigin(): Array<string> {
-  if (window.navigator.languages && window.navigator.languages.length)
-    return [...window.navigator.languages]
-  if (window.navigator.language) return [window.navigator.language]
+export function getBrowserLocalOrigin(standardize = false): Array<string> {
+  const languages: string[] = []
+
   try {
-    //treat ie 10 and older
-    if (Reflect.has(window.navigator, 'userLanguage')) {
+    // Modern browsers: navigator.languages (priority order)
+    if (window.navigator.languages && window.navigator.languages.length) {
+      languages.push(...window.navigator.languages)
+    }
+    // Fallback: single language
+    else if (window.navigator.language) {
+      languages.push(window.navigator.language)
+    }
+    // IE 10 and older compatibility
+    else if (Reflect.has(window.navigator, 'userLanguage')) {
       // @ts-expect-error - IE compatibility
-      return [window.navigator['userLanguage'].toString()]
+      const userLang = window.navigator['userLanguage']
+      if (userLang) {
+        languages.push(userLang.toString())
+      }
     }
   } catch {
-    // Ignore errors
+    // Ignore errors and return empty array
   }
-  return []
+
+  if (standardize && languages.length > 0) {
+    // Standardize language codes while preserving order and removing duplicates
+    const standardized = new Set<string>()
+    const result: string[] = []
+
+    for (const lang of languages) {
+      try {
+        const normalized = standardizeLanguageCode(lang)
+        if (!standardized.has(normalized)) {
+          standardized.add(normalized)
+          result.push(normalized)
+        }
+      } catch {
+        // If standardization fails, use original code
+        if (!standardized.has(lang)) {
+          standardized.add(lang)
+          result.push(lang)
+        }
+      }
+    }
+
+    return result
+  }
+
+  return languages
 }
 
 /**
- * detect language name from browser
+ * Detect language name from browser (original API, maintained for compatibility)
  * Returns the object of LanguageName or null
- * @returns  {chinese: String,origin: String,rtl: Boolean,key: String,english: String} | null
+ * @returns Language information object or null
  */
 export function getLanguageName(): LanguageName | null {
   const locals = getBrowserLocalOrigin()
@@ -78,12 +204,74 @@ export function getLanguageName(): LanguageName | null {
   return null
 }
 
+/**
+ * Enhanced language detection with performance optimizations
+ * @param options Configuration options for language detection
+ * @returns Language information object or null
+ */
+export function getLanguageNameOptimized(
+  options: {
+    useCache?: boolean
+    standardize?: boolean
+    maxFallbacks?: number
+  } = {}
+): LanguageName | null {
+  const { useCache = true, standardize = true, maxFallbacks = 10 } = options
+
+  if (!useCache) {
+    // Bypass cache for fresh detection
+    const locals = getBrowserLocalOrigin(standardize)
+    const limitedLocals = locals.slice(0, maxFallbacks) // Limit fallbacks for performance
+    const name = translateOriginLanguageUncached(limitedLocals)
+    if (name) return languageNames.get(name) || null
+    return null
+  }
+
+  // Use cached version (default behavior)
+  const locals = getBrowserLocalOrigin(standardize)
+  const limitedLocals = locals.slice(0, maxFallbacks)
+  const name = translateOriginLanguage(limitedLocals)
+  if (name) return languageNames.get(name) || null
+  return null
+}
+
+/**
+ * Uncached version of translateOriginLanguage for testing and benchmarking
+ */
+function translateOriginLanguageUncached(names: Array<string>): string | null {
+  if (!names.length) return null
+
+  // Generate expanded language codes with fallbacks
+  const expandedCodes: string[] = []
+  const seen = new Set<string>()
+
+  for (const name of names) {
+    const variants = parseLanguageTag(name)
+    for (const variant of variants) {
+      if (!seen.has(variant)) {
+        seen.add(variant)
+        expandedCodes.push(variant)
+      }
+    }
+  }
+
+  // Search in priority order using combined map
+  for (const code of expandedCodes) {
+    const result = combinedLanguageMap.get(code)
+    if (result) {
+      return result
+    }
+  }
+
+  return null
+}
+
 export const languageNames: Map<string, LanguageName> = new Map([
   [
     'albanian',
     {
       chinese: '阿尔巴尼亚语',
-      origin: 'shqiptare',
+      origin: 'Shqip',
       rtl: false,
       key: 'albanian',
       english: 'Albanian',
@@ -143,10 +331,10 @@ export const languageNames: Map<string, LanguageName> = new Map([
     'cambodia',
     {
       chinese: '高棉语',
-      origin: 'កម្ពុជា។',
+      origin: 'ខ្មែរ',
       rtl: false,
       key: 'cambodia',
-      english: 'Cambodia',
+      english: 'Khmer',
     },
   ],
   [
@@ -243,7 +431,7 @@ export const languageNames: Map<string, LanguageName> = new Map([
     'finnish',
     {
       chinese: '芬兰语',
-      origin: 'Suomalainen',
+      origin: 'suomi',
       rtl: false,
       key: 'finnish',
       english: 'Finnish',
@@ -313,7 +501,7 @@ export const languageNames: Map<string, LanguageName> = new Map([
     'hungarian',
     {
       chinese: '匈牙利语',
-      origin: 'húngaro',
+      origin: 'magyar',
       rtl: false,
       key: 'hungarian',
       english: 'Hungarian',
@@ -343,7 +531,7 @@ export const languageNames: Map<string, LanguageName> = new Map([
     'japanese',
     {
       chinese: '日语',
-      origin: '日本',
+      origin: '日本語',
       rtl: false,
       key: 'japanese',
       english: 'Japanese',
@@ -353,7 +541,7 @@ export const languageNames: Map<string, LanguageName> = new Map([
     'korean',
     {
       chinese: '韩语',
-      origin: '한국인',
+      origin: '한국어',
       rtl: false,
       key: 'korean',
       english: 'Korean',
@@ -366,7 +554,7 @@ export const languageNames: Map<string, LanguageName> = new Map([
       origin: 'ພາສາລາວ',
       rtl: false,
       key: 'laos',
-      english: 'Laos',
+      english: 'Lao',
     },
   ],
   [
@@ -446,7 +634,7 @@ export const languageNames: Map<string, LanguageName> = new Map([
       origin: 'Polski',
       rtl: false,
       key: 'poland',
-      english: 'Poland',
+      english: 'Polish',
     },
   ],
   [
@@ -553,7 +741,7 @@ export const languageNames: Map<string, LanguageName> = new Map([
     'thai',
     {
       chinese: '泰语',
-      origin: 'แบบไทย',
+      origin: 'ไทย',
       rtl: false,
       key: 'thai',
       english: 'Thai',
@@ -726,7 +914,7 @@ export const languageNames: Map<string, LanguageName> = new Map([
       chinese: '冰岛语',
       origin: 'íslenskur',
       rtl: false,
-      key: 'Icelandic',
+      key: 'icelandic',
       english: 'Icelandic',
     },
   ],
@@ -766,7 +954,7 @@ export const languageNames: Map<string, LanguageName> = new Map([
       chinese: '卡纳达语',
       origin: 'ಕನ್ನಡ',
       rtl: false,
-      key: 'Kannada',
+      key: 'kannada',
       english: 'Kannada',
     },
   ],
@@ -784,9 +972,9 @@ export const languageNames: Map<string, LanguageName> = new Map([
     'latvian',
     {
       chinese: '拉脱维亚语',
-      origin: 'Latvian',
+      origin: 'latviešu',
       rtl: false,
-      key: 'Latvian',
+      key: 'latvian',
       english: 'Latvian',
     },
   ],
@@ -831,16 +1019,6 @@ export const languageNames: Map<string, LanguageName> = new Map([
     },
   ],
   [
-    'slovak',
-    {
-      chinese: '斯洛伐克语',
-      origin: 'Slovenčina',
-      rtl: false,
-      key: 'slovak',
-      english: 'Slovak',
-    },
-  ],
-  [
     'slovenian',
     {
       chinese: '斯洛文尼亚语',
@@ -858,16 +1036,6 @@ export const languageNames: Map<string, LanguageName> = new Map([
       rtl: false,
       key: 'somali',
       english: 'Somali',
-    },
-  ],
-  [
-    'swedish',
-    {
-      chinese: '瑞典语',
-      origin: 'Svenskt',
-      rtl: false,
-      key: 'swedish',
-      english: 'Swedish',
     },
   ],
   [

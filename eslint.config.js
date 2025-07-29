@@ -83,6 +83,14 @@ export default [
     },
   },
   {
-    ignores: ['dist/', 'node_modules/', '*.config.js', 'jest.config.ts'],
+    ignores: [
+      'dist/',
+      'lib/',
+      'node_modules/',
+      'coverage/',
+      'benchmark/',
+      '*.config.js',
+      'jest.config.ts',
+    ],
   },
 ]
