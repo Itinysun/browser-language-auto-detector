@@ -1,6 +1,6 @@
 {
   "name": "browser-language-auto-detector",
-  "version": "2.0.5",
+  "version": "2.1.0",
   "description": "🌍 Intelligent browser language detection library with 100+ languages support, RFC 5646 compliant, LRU cache optimized, TypeScript ready",
   "type": "module",
   "main": "./lib/index.js",
