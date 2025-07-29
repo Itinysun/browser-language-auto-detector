@@ -1,0 +1,30 @@
+{
+  "git": {
+    "commitMessage": "v${version}",
+    "tagName": "v${version}",
+    "requireBranch": "master",
+    "requireCleanWorkingDir": true
+  },
+  "npm": {
+    "publish": true,
+    "publishConfig": {
+      "access": "public",
+      "registry": "https://registry.npmjs.org"
+    }
+  },
+  "github": {
+    "release": true,
+    "releaseName": "v${version}",
+    "tokenRef": "GITHUB_TOKEN"
+  },
+  "hooks": {
+    "before:init": ["father doctor"],
+    "before:release": ["father build"],
+    "after:release": "echo 发布完成! 版本: ${version}"
+  },
+  "plugins": {
+    "@release-it/conventional-changelog": {
+      "preset": "conventionalcommits"
+    }
+  }
+}
