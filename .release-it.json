@@ -18,8 +18,8 @@
     "tokenRef": "GITHUB_TOKEN"
   },
   "hooks": {
-    "before:init": ["father doctor"],
-    "before:release": ["father build"],
+    "before:init": ["pnpm test"],
+    "before:release": ["pnpm build"],
     "after:release": "echo 发布完成! 版本: ${version}"
   },
   "plugins": {

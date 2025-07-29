@@ -14,9 +14,7 @@ const jestConfig: JestConfigWithTsJest = {
       },
     ],
   },
-  collectCoverageFrom: [
-    'src/**/*.{ts,tsx}'
-  ],
-  collectCoverage:true
-};
+  collectCoverageFrom: ['src/**/*.{ts,tsx}'],
+  collectCoverage: true,
+}
 export default jestConfig
