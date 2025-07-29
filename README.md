@@ -275,7 +275,7 @@ const original = getBrowserLocalOrigin(false)
 
 ## 📈 更新日志
 
-### v2.0.5 (最新)
+### v2.1.0 (最新)
 
 - 🚀 **性能优化**：实现 LRU 缓存机制
 - 🎯 **算法改进**：标准 RFC 5646 语言标签解析

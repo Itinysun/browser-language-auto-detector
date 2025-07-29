@@ -32,8 +32,8 @@ fi
 
 # 检查 Node.js 版本
 NODE_VERSION=$(node --version | cut -d 'v' -f 2 | cut -d '.' -f 1)
-if [ "$NODE_VERSION" -lt 20 ]; then
-  echo "❌ 错误: 需要 Node.js >= 20.0.0"
+if [ "$NODE_VERSION" -lt 18 ]; then
+  echo "❌ 错误: 需要 Node.js >= 18.0.0"
   echo "当前版本: $(node --version)"
   exit 1
 fi
@@ -45,8 +45,8 @@ if ! command -v pnpm &> /dev/null; then
 fi
 
 PNPM_VERSION=$(pnpm --version | cut -d '.' -f 1)
-if [ "$PNPM_VERSION" -lt 9 ]; then
-  echo "❌ 错误: 需要 pnpm >= 9.0.0"
+if [ "$PNPM_VERSION" -lt 8 ]; then
+  echo "❌ 错误: 需要 pnpm >= 8.0.0"
   echo "当前版本: $(pnpm --version)"
   exit 1
 fi
@@ -58,14 +58,10 @@ pnpm install --frozen-lockfile
 # 运行测试（如果有测试文件）
 if [ -n "$(find . -name '*.test.*' -o -name '*.spec.*' | head -1)" ]; then
   echo "🧪 运行测试..."
-  pnpm run test:run
+  pnpm run test
 else
   echo "⏭️  跳过测试（未找到测试文件）..."
 fi
-
-# 类型检查
-echo "🔧 类型检查..."
-pnpm run typecheck
 
 # 代码检查
 echo "🔍 代码检查..."

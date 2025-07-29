@@ -275,7 +275,7 @@ const original = getBrowserLocalOrigin(false)
 
 ## 📈 Changelog
 
-### v2.0.5 (Latest)
+### v2.1.0 (Latest)
 
 - 🚀 **Performance Optimization**: Implemented LRU caching mechanism
 - 🎯 **Algorithm Improvement**: Standard RFC 5646 language tag parsing
