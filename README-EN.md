@@ -45,7 +45,7 @@ console.log(languageInfo)
 // Example output
 {
   chinese: '简体中文',
-  origin: '简体中文', 
+  origin: '简体中文',
   english: 'Chinese Simplified',
   rtl: false,
   key: 'chinese'
@@ -55,17 +55,17 @@ console.log(languageInfo)
 ### Advanced Usage
 
 ```typescript
-import { 
-  getLanguageNameOptimized, 
+import {
+  getLanguageNameOptimized,
   getBrowserLocalOrigin,
-  translateOriginLanguage 
+  translateOriginLanguage,
 } from 'browser-language-auto-detector'
 
 // Use optimized version (recommended)
 const result = getLanguageNameOptimized({
-  useCache: true,        // Enable caching
-  standardize: true,     // Standardize language codes
-  maxFallbacks: 5        // Maximum fallback count
+  useCache: true, // Enable caching
+  standardize: true, // Standardize language codes
+  maxFallbacks: 5, // Maximum fallback count
 })
 
 // Get browser's raw language codes
@@ -114,6 +114,7 @@ The library supports 100+ languages including but not limited to:
 - **African Languages**: Swahili, Hausa, Amharic, etc.
 
 Each language contains:
+
 - `chinese`: Chinese name
 - `origin`: Native language name
 - `english`: English name
@@ -174,7 +175,7 @@ Detect current browser language and return language information object.
 ```typescript
 getLanguageNameOptimized(options?: {
   useCache?: boolean      // Whether to use cache, default true
-  standardize?: boolean   // Whether to standardize language codes, default true  
+  standardize?: boolean   // Whether to standardize language codes, default true
   maxFallbacks?: number   // Maximum fallback count, default 10
 }): LanguageName | null
 ```
@@ -208,7 +209,7 @@ const userLanguage = getLanguageName()
 if (userLanguage) {
   // Set application language
   i18n.changeLanguage(userLanguage.key)
-  
+
   // Set RTL support
   document.dir = userLanguage.rtl ? 'rtl' : 'ltr'
 }
@@ -219,9 +220,9 @@ if (userLanguage) {
 ```typescript
 import { getLanguageNameOptimized } from 'browser-language-auto-detector'
 
-const language = getLanguageNameOptimized({ 
+const language = getLanguageNameOptimized({
   useCache: true,
-  standardize: true 
+  standardize: true,
 })
 
 if (language) {
@@ -239,7 +240,7 @@ const userLanguages = getBrowserLocalOrigin()
 // Send user language preference data to analytics service
 analytics.track('user_language_preference', {
   primary: userLanguages[0],
-  fallbacks: userLanguages.slice(1)
+  fallbacks: userLanguages.slice(1),
 })
 ```
 
@@ -251,12 +252,12 @@ analytics.track('user_language_preference', {
 // Use cache for high-frequency calls
 const result = getLanguageNameOptimized({
   useCache: true,
-  maxFallbacks: 3  // Limit fallbacks for better performance
+  maxFallbacks: 3, // Limit fallbacks for better performance
 })
 
 // Disable cache for one-time calls
 const freshResult = getLanguageNameOptimized({
-  useCache: false
+  useCache: false,
 })
 ```
 
@@ -265,10 +266,10 @@ const freshResult = getLanguageNameOptimized({
 ```typescript
 // Get standardized language codes (recommended)
 const standardized = getBrowserLocalOrigin(true)
-// ['zh', 'en'] 
+// ['zh', 'en']
 
 // Get raw language codes
-const original = getBrowserLocalOrigin(false)  
+const original = getBrowserLocalOrigin(false)
 // ['zh-Hans-CN', 'zh-CN', 'zh', 'en-US', 'en']
 ```
 

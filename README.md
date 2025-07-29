@@ -45,7 +45,7 @@ console.log(languageInfo)
 // 输出示例
 {
   chinese: '简体中文',
-  origin: '简体中文', 
+  origin: '简体中文',
   english: 'Chinese Simplified',
   rtl: false,
   key: 'chinese'
@@ -55,17 +55,17 @@ console.log(languageInfo)
 ### 高级用法
 
 ```typescript
-import { 
-  getLanguageNameOptimized, 
+import {
+  getLanguageNameOptimized,
   getBrowserLocalOrigin,
-  translateOriginLanguage 
+  translateOriginLanguage,
 } from 'browser-language-auto-detector'
 
 // 使用优化版本（推荐）
 const result = getLanguageNameOptimized({
-  useCache: true,        // 启用缓存
-  standardize: true,     // 标准化语言代码
-  maxFallbacks: 5        // 最大回退数量
+  useCache: true, // 启用缓存
+  standardize: true, // 标准化语言代码
+  maxFallbacks: 5, // 最大回退数量
 })
 
 // 获取浏览器原始语言代码
@@ -114,6 +114,7 @@ getLanguageNameOptimized (缓存):
 - **非洲语言**：斯瓦希里语、豪萨语、阿姆哈拉语等
 
 每种语言包含：
+
 - `chinese`: 中文名称
 - `origin`: 原生语言名称
 - `english`: 英文名称
@@ -174,7 +175,7 @@ getLanguageName(): LanguageName | null
 ```typescript
 getLanguageNameOptimized(options?: {
   useCache?: boolean      // 是否使用缓存，默认 true
-  standardize?: boolean   // 是否标准化语言代码，默认 true  
+  standardize?: boolean   // 是否标准化语言代码，默认 true
   maxFallbacks?: number   // 最大回退数量，默认 10
 }): LanguageName | null
 ```
@@ -208,7 +209,7 @@ const userLanguage = getLanguageName()
 if (userLanguage) {
   // 设置应用语言
   i18n.changeLanguage(userLanguage.key)
-  
+
   // 设置 RTL 支持
   document.dir = userLanguage.rtl ? 'rtl' : 'ltr'
 }
@@ -219,9 +220,9 @@ if (userLanguage) {
 ```typescript
 import { getLanguageNameOptimized } from 'browser-language-auto-detector'
 
-const language = getLanguageNameOptimized({ 
+const language = getLanguageNameOptimized({
   useCache: true,
-  standardize: true 
+  standardize: true,
 })
 
 if (language) {
@@ -239,7 +240,7 @@ const userLanguages = getBrowserLocalOrigin()
 // 发送用户语言偏好数据到分析服务
 analytics.track('user_language_preference', {
   primary: userLanguages[0],
-  fallbacks: userLanguages.slice(1)
+  fallbacks: userLanguages.slice(1),
 })
 ```
 
@@ -251,12 +252,12 @@ analytics.track('user_language_preference', {
 // 高频调用场景使用缓存
 const result = getLanguageNameOptimized({
   useCache: true,
-  maxFallbacks: 3  // 限制回退数量提升性能
+  maxFallbacks: 3, // 限制回退数量提升性能
 })
 
 // 一次性调用场景关闭缓存
 const freshResult = getLanguageNameOptimized({
-  useCache: false
+  useCache: false,
 })
 ```
 
@@ -265,10 +266,10 @@ const freshResult = getLanguageNameOptimized({
 ```typescript
 // 获取标准化语言代码（推荐）
 const standardized = getBrowserLocalOrigin(true)
-// ['zh', 'en'] 
+// ['zh', 'en']
 
 // 获取原始语言代码
-const original = getBrowserLocalOrigin(false)  
+const original = getBrowserLocalOrigin(false)
 // ['zh-Hans-CN', 'zh-CN', 'zh', 'en-US', 'en']
 ```
 
